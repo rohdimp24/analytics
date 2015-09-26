@@ -46,6 +46,7 @@ plot(turbineData$X189,turbineData$X190)
 abline(lm(turbineData$X190~turbineData$X189), col="red")
 ```
 
+So the above graphs indicate that there is strong relation between the two set of data points.
 
 
 ```{r}
