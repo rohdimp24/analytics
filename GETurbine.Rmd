@@ -65,10 +65,14 @@ residualTrain=turbineData$X190-fittingTrain
 diff=residualTrain-residualsBySummary
 
 
+###now plotting the diagnostics plot
 
 par(mfrow=c(2,2))
 #diagnostics
 plot(linreg1)
+
+
+
 
 #getting the outliers
 plot(fitted.values(linreg1),rstudent(linreg1))
@@ -89,6 +93,37 @@ RMSE=sqrt(SSE/nrow(turbineData))
 
 
 ```
+some analysis
+
+```{r}
+#get the outliers
+outlierTest(linreg1)
+
+#get the high lebvergare points
+influencePlot(linreg1)
+
+##one thing could be to remove these points and then recalculate
+
+#else if we do 
+spreadLevelPlot(linreg1)
+
+#correction
+#suppose we remove the datapoints of 409, 635, 636
+
+#turbineDataUpdated<-turbineData[-c(409,635,636),]
+turbineDataUpdated<-turbineData
+linreg2=lm(turbineData$X190~turbineData$X189+I(turbineData$X189^2))
+summary(linreg2)
+
+plot(linreg2)
+SSE2=sum(linreg2$residuals^2)
+RMSE2=sqrt(SSE2/nrow(turbineData))
+
+```
+So not much of the significant changes in teh RMSE and R2 in case of the interaction model versus the simple linear model. So I would consider the first model to be better
+
+
+
 All the variables
 
 ```{r}
