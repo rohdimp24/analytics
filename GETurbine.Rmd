@@ -1,0 +1,142 @@
+---
+title: "GETurbine"
+output: html_document
+---
+
+```{r}
+
+filenameToRead<-"train.csv"
+turbineData<-read.csv(filenameToRead)
+str(turbineData)
+plot(turbineData$X189,turbineData$X190)
+
+```
+
+Performing some explorations
+
+```{r}
+#Find the summary of the values
+
+summary(turbineData$X189)
+
+summary(turbineData$X190)
+
+
+```
+The summary clearly shows that the X190 and X189 have similar distribution
+
+
+Now drawing the box plts and the histograms to see the disribution
+
+```{r}
+#boxplots
+boxplot(turbineData$X190,turbineData$X189,names=c("X190","X189"))
+
+#hist
+hist(turbineData$X189)
+
+hist(turbineData$X190)
+
+
+#correlations
+cor(turbineData$X189,turbineData$X190)
+
+#plot the points with the linear regression line
+plot(turbineData$X189,turbineData$X190)
+abline(lm(turbineData$X190~turbineData$X189), col="red")
+```
+
+
+
+```{r}
+linreg1=lm(turbineData$X190~turbineData$X189,data=turbineData)
+summary(linreg1)
+
+par(mfrow=c(2,2))
+#diagnostics
+plot(linreg1)
+
+#getting the outliers
+plot(fitted.values(linreg1),rstudent(linreg1))
+abline(h=c(-3,3), col="red")
+which(rstudent(linreg1)>3)
+
+
+
+#values from the model
+#residuals
+linreg1$residuals
+
+#get the fitted values
+linreg1$fitted.values
+#calculate the SSE
+SSE=sum(linreg1$residuals^2)
+RMSE=sqrt(SSE/nrow(turbineData))
+
+
+```
+All the variables
+
+```{r}
+model2=lm(turbineData$X190~.,data=turbineData)
+summary(model2)
+#data is highly correlated
+cor(turbineData)
+
+#beeter model as the R2 error is less than the earlier version
+model3=lm(turbineData$X190~turbineData$X180+turbineData$X186+turbineData$X188+turbineData$X189+turbineData$X191+turbineData$X193+turbineData$X200)
+summary(model3)
+
+par(mfrow=c(2,2))
+
+plot(model3)
+
+
+which.max(hatvalues(model3)) 
+
+residplot <- function(fit, nbreaks=10){
+  z <- rstudent(fit)
+  hist(z, breaks=nbreaks, freq=FALSE,xlab="Studentized Residual",main="Distribution of Errors")
+  rug(jitter(z), col="brown")
+  curve(dnorm(x, mean=mean(z), sd=sd(z)),add=TRUE, col="blue", lwd=2)
+  lines(density(z)$x, density(z)$y,col="red", lwd=2, lty=2)
+  #legend("topright",legend = c( "Normal Curve", "Kernel Density Curve"),lty=1:2, col=c("blue","red"), cex=.7)
+}
+
+residplot(model3)
+library(car)
+spreadLevelPlot(model3)
+
+model4=lm(turbineData$X190^0.48~turbineData$X180+turbineData$X186+turbineData$X188+turbineData$X189+turbineData$X191+turbineData$X193+turbineData$X200)
+
+summary(model4)
+
+spreadLevelPlot(model4)
+
+plot(model4)
+
+library(tree)
+tree.train=tree(X190~.,data=turbineData)
+plot(tree.train)
+text(tree.train,pretty=0)
+
+```
+```{r}
+library(leaps)
+regfit.full=regsubsets(X190 ~.,turbineData)
+summary(regfit.full)
+```
+
+
+Few approaches
+
+1. Break the data into train and test
+2. You want to reach to a model using a test set created from the known samples
+3. Apply the minear regression (calculate the RMSE)
+4. Apply the tree methods and then calculate the RMSE
+5. Apply the non linear methods like spline etc to get the model
+
+Once you get the model with a good RMSE and error you wil use this as the one for the test data provided
+
+
+
