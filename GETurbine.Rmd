@@ -53,6 +53,19 @@ So the above graphs indicate that there is strong relation between the two set o
 linreg1=lm(turbineData$X190~turbineData$X189,data=turbineData)
 summary(linreg1)
 
+fittingTrain=predict(linreg1)
+
+#getting the residuals values using the summary function
+residualsBySummary=summary(linreg1)$residuals
+
+#calculating the residuals using the predictions and the actual value in teh training data
+residualTrain=turbineData$X190-fittingTrain
+
+#both should be same
+diff=residualTrain-residualsBySummary
+
+
+
 par(mfrow=c(2,2))
 #diagnostics
 plot(linreg1)
