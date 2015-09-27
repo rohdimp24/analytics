@@ -119,8 +119,32 @@ plot(linreg2)
 SSE2=sum(linreg2$residuals^2)
 RMSE2=sqrt(SSE2/nrow(turbineData))
 
+
+#actually we can quickly see if tyhe power of the X189 will have any effect or not by calculating the 
+#polynomial regression
+polyLin<-lm(turbineData$X190~poly(turbineData$X189,3))
+summary(polyLin)
+#we can see that on the ppower 1 is of any significane which means the linreg1
+
 ```
 So not much of the significant changes in teh RMSE and R2 in case of the interaction model versus the simple linear model. So I would consider the first model to be better
+
+Draw the standard error lines 
+```{r}
+
+preds<-predict(linreg1,se=TRUE)
+#get the standard errors at any xo for the curve
+se.bands=cbind(preds$fit+2*preds$se.fit,preds$fit-2*preds$se.fit)
+
+#now plot the main region
+plot(turbineData$X189,turbineData$X190,col="darkgrey")
+#this is the main line
+lines(turbineData$X189,preds$fit,lwd=2,col="blue")
+#now draw the SE lines
+matlines(turbineData$X189,se.bands,col="red",lty=2)
+
+
+```
 
 
 
@@ -140,6 +164,12 @@ par(mfrow=c(2,2))
 
 plot(model3)
 
+SSE3=sum(model3$residuals^2)
+RMSE3=sqrt(SSE3/nrow(turbineData))
+
+
+
+####I DONT THINK THIS IS REQUIRED ######
 
 which.max(hatvalues(model3)) 
 
@@ -163,11 +193,16 @@ summary(model4)
 spreadLevelPlot(model4)
 
 plot(model4)
+#############
 
 library(tree)
 tree.train=tree(X190~.,data=turbineData)
 plot(tree.train)
 text(tree.train,pretty=0)
+
+
+
+
 
 ```
 ```{r}
