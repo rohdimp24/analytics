@@ -33,7 +33,10 @@ Now drawing the box plts and the histograms to see the disribution
 
 ```{r}
 #boxplots
+
 boxplot(turbineTrainData$X190,turbineTrainData$X189,names=c("X190","X189"))
+
+#boxplot is showing that the distribution of the datapoints in the quantiles is similar. The median is almost the same which indicates that X189 can be a good distribution for making predictions for X190
 
 #hist
 hist(turbineTrainData$X189)
