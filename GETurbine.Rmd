@@ -44,13 +44,15 @@ cor(turbineData$X189,turbineData$X190)
 #plot the points with the linear regression line
 plot(turbineData$X189,turbineData$X190)
 abline(lm(turbineData$X190~turbineData$X189), col="red")
+
+
 ```
 
 So the above graphs indicate that there is strong relation between the two set of data points.
 
 
 ```{r}
-linreg1=lm(turbineData$X190~turbineData$X189,data=turbineData)
+linreg1=lm(X190~X189,data=turbineData)
 summary(linreg1)
 
 fittingTrain=predict(linreg1)
@@ -112,7 +114,7 @@ spreadLevelPlot(linreg1)
 
 #turbineDataUpdated<-turbineData[-c(409,635,636),]
 turbineDataUpdated<-turbineData
-linreg2=lm(turbineData$X190~turbineData$X189+I(turbineData$X189^2))
+linreg2=lm(X190~X189+I(X189^2),data=turbineData)
 summary(linreg2)
 
 plot(linreg2)
@@ -122,7 +124,7 @@ RMSE2=sqrt(SSE2/nrow(turbineData))
 
 #actually we can quickly see if tyhe power of the X189 will have any effect or not by calculating the 
 #polynomial regression
-polyLin<-lm(turbineData$X190~poly(turbineData$X189,3))
+polyLin<-lm(X190~poly(X189,3),data=turbineData)
 summary(polyLin)
 #we can see that on the ppower 1 is of any significane which means the linreg1
 
@@ -146,6 +148,35 @@ matlines(turbineData$X189,se.bands,col="red",lty=2)
 
 ```
 
+Run the model on the test data to see the predictions
+```{r}
+#read the test data
+turbineTestData<-read.csv("test.csv")
+summary(turbineTestData)
+turbineSubTestData=turbineTestData[c(1:2),]
+predictions=predict(linreg1,newdata=turbineTestData,interval="prediction")
+
+#coeffs<-coef(linreg1)
+#predictions<-coeffs[1]+coeffs[2]*turbineTestData$X189
+head(predictions)
+str(turbineTestData)
+testErrorDiff=turbineTestData$X190-predictions...how to get the fit values
+
+SSET=sum(testErrorDiff^2)
+RMSET=sqrt(SSET/nrow(turbineTestData))
+#mean to be calculated on the trainig set
+baseSSE=sum((turbineTestData$X190-mean(turbineData$X190))^2)
+R2=1-SSET/baseSSE
+
+#see how the data is plotted
+plot(turbineTestData$X190)
+points(predictions,col="red")
+
+
+```
+
+
+
 
 
 All the variables
@@ -166,6 +197,11 @@ plot(model3)
 
 SSE3=sum(model3$residuals^2)
 RMSE3=sqrt(SSE3/nrow(turbineData))
+
+
+
+
+#read the test data
 
 
 
