@@ -2,25 +2,28 @@
 title: "GETurbine"
 output: html_document
 ---
+This is the solution for the first question
+•  It is recommended to first analyze the performance of turbine 190 compared to neighboring turbine 189.  Consider the error if turbine 189 is used as an estimator of turbine 190.  How well does this estimator perform?
+
+
+__Read the data first__
 
 ```{r}
 
 filenameToRead<-"train.csv"
-turbineData<-read.csv(filenameToRead)
-str(turbineData)
-plot(turbineData$X189,turbineData$X190)
+turbineTrainData<-read.csv(filenameToRead)
+str(turbineTrainData)
 
 ```
 
-Performing some explorations
+__Performing some data explorations__
 
 ```{r}
 #Find the summary of the values
 
-summary(turbineData$X189)
+summary(turbineTrainData$X189)
 
-summary(turbineData$X190)
-
+summary(turbineTrainData$X190)
 
 ```
 The summary clearly shows that the X190 and X189 have similar distribution
@@ -30,233 +33,142 @@ Now drawing the box plts and the histograms to see the disribution
 
 ```{r}
 #boxplots
-boxplot(turbineData$X190,turbineData$X189,names=c("X190","X189"))
+boxplot(turbineTrainData$X190,turbineTrainData$X189,names=c("X190","X189"))
 
 #hist
-hist(turbineData$X189)
+hist(turbineTrainData$X189)
 
-hist(turbineData$X190)
+hist(turbineTrainData$X190)
 
 
 #correlations
-cor(turbineData$X189,turbineData$X190)
+cor(turbineTrainData$X189,turbineTrainData$X190)
 
 #plot the points with the linear regression line
-plot(turbineData$X189,turbineData$X190)
-abline(lm(turbineData$X190~turbineData$X189), col="red")
+plot(turbineTrainData$X189,turbineTrainData$X190)
+#abline(lm(turbineTrainData$X190~turbineTrainData$X189), col="red")
 
 
 ```
 
-So the above graphs indicate that there is strong relation between the two set of data points.
+So the above graphs indicate that there is strong relation between the two set of data points and it is possible to fit a line that passes through the bulk of points  
+Also the histograms show that the distribution of 189 and 190 is similar and not Normal distribution
 
 
+__Now fitting the model__
 ```{r}
-linreg1=lm(X190~X189,data=turbineData)
+linreg1=lm(X190~X189,data=turbineTrainData)
 summary(linreg1)
+
+#plot the points with the linear regression line
+plot(turbineTrainData$X189,turbineTrainData$X190)
+abline(lm(turbineTrainData$X190~turbineTrainData$X189), col="red")
+
 
 fittingTrain=predict(linreg1)
 
 #getting the residuals values using the summary function
-residualsBySummary=summary(linreg1)$residuals
+residualsBySummary=linreg1$residuals
 
 #calculating the residuals using the predictions and the actual value in teh training data
-residualTrain=turbineData$X190-fittingTrain
+residualTrain=turbineTrainData$X190-fittingTrain
 
 #both should be same
 diff=residualTrain-residualsBySummary
 
-
-###now plotting the diagnostics plot
-
-par(mfrow=c(2,2))
-#diagnostics
-plot(linreg1)
-
-
-
-
-#getting the outliers
-plot(fitted.values(linreg1),rstudent(linreg1))
-abline(h=c(-3,3), col="red")
-which(rstudent(linreg1)>3)
-
-
-
-#values from the model
-#residuals
-linreg1$residuals
-
-#get the fitted values
-linreg1$fitted.values
 #calculate the SSE
-SSE=sum(linreg1$residuals^2)
-RMSE=sqrt(SSE/nrow(turbineData))
-
-
+trainSSE=sum(linreg1$residuals^2)
+trainRMSE=sqrt(trainSSE/nrow(turbineTrainData))
+trainRMSE
+trainSST=sum((turbineTrainData$X190-mean(turbineTrainData$X190))^2)
+trainR2=1-trainSSE/trainSST
+trainR2
 ```
-some analysis
 
+__Draw the standard error lines__ 
 ```{r}
-#get the outliers
-outlierTest(linreg1)
-
-#get the high lebvergare points
-influencePlot(linreg1)
-
-##one thing could be to remove these points and then recalculate
-
-#else if we do 
-spreadLevelPlot(linreg1)
-
-#correction
-#suppose we remove the datapoints of 409, 635, 636
-
-#turbineDataUpdated<-turbineData[-c(409,635,636),]
-turbineDataUpdated<-turbineData
-linreg2=lm(X190~X189+I(X189^2),data=turbineData)
-summary(linreg2)
-
-plot(linreg2)
-SSE2=sum(linreg2$residuals^2)
-RMSE2=sqrt(SSE2/nrow(turbineData))
-
-
-#actually we can quickly see if tyhe power of the X189 will have any effect or not by calculating the 
-#polynomial regression
-polyLin<-lm(X190~poly(X189,3),data=turbineData)
-summary(polyLin)
-#we can see that on the ppower 1 is of any significane which means the linreg1
-
-```
-So not much of the significant changes in teh RMSE and R2 in case of the interaction model versus the simple linear model. So I would consider the first model to be better
-
-Draw the standard error lines 
-```{r}
-
+par(mfrow=c(1,1))
 preds<-predict(linreg1,se=TRUE)
 #get the standard errors at any xo for the curve
 se.bands=cbind(preds$fit+2*preds$se.fit,preds$fit-2*preds$se.fit)
 
 #now plot the main region
-plot(turbineData$X189,turbineData$X190,col="darkgrey")
+plot(turbineTrainData$X189,turbineTrainData$X190,col="darkgrey")
 #this is the main line
-lines(turbineData$X189,preds$fit,lwd=2,col="blue")
+lines(turbineTrainData$X189,preds$fit,lwd=2,col="blue")
 #now draw the SE lines
-matlines(turbineData$X189,se.bands,col="red",lty=2)
+matlines(turbineTrainData$X189,se.bands,col="red",lty=2)
 
 
 ```
+
+
+__Performing some linear regression diagnostics on the above model__
+```{r}
+
+par(mfrow=c(2,2))
+#diagnostics
+plot(linreg1)
+
+par(mfrow=c(1,1))
+#plotting the outliers
+plot(fitted.values(linreg1),rstudent(linreg1))
+abline(h=c(-3,3), col="red")
+which(rstudent(linreg1)>3)
+
+#another way to get the outliers
+library(car)
+outliers=outlierTest(linreg1)
+outliers
+
+#get the high lebvergare points
+highLevPoints<-influencePlot(linreg1)
+highLevPoints
+```
+  
+__Some obeservations__  
+* We dont see many outliers or high leverage points
+* The plot between the residuals and fitted values is almost linear which indicates that the linear regression model is a good fit
+
+Suppose we try to use a polynomial degree of the X189 just to see if that improves the R2 significantly
+```{r}
+
+polyLin<-lm(X190~poly(X189,3),data=turbineTrainData)
+summary(polyLin)
+
+```
+The summary shows that the power of 1 is only significant and other powers are not that significant. So we dont require a model which has nonlinear relationship with predictor variables.
+
+
 
 Run the model on the test data to see the predictions
 ```{r}
 #read the test data
 turbineTestData<-read.csv("test.csv")
 summary(turbineTestData)
-turbineSubTestData=turbineTestData[c(1:2),]
-predictions=predict(linreg1,newdata=turbineTestData,interval="prediction")
 
+turbineSubTestData=turbineTestData[c(1:2),]
+predictionData=predict(linreg1,newdata=turbineTestData,interval="prediction")
+predictions<-predictionData[1:nrow(predictionData)]
 #coeffs<-coef(linreg1)
 #predictions<-coeffs[1]+coeffs[2]*turbineTestData$X189
 head(predictions)
 str(turbineTestData)
-testErrorDiff=turbineTestData$X190-predictions...how to get the fit values
+testErrorDiff=turbineTestData$X190-predictions
 
-SSET=sum(testErrorDiff^2)
-RMSET=sqrt(SSET/nrow(turbineTestData))
+testSSE=sum(testErrorDiff^2)
+testRMSE=sqrt(testSSE/nrow(turbineTestData))
+testRMSE
 #mean to be calculated on the trainig set
-baseSSE=sum((turbineTestData$X190-mean(turbineData$X190))^2)
-R2=1-SSET/baseSSE
+testSST=sum((turbineTestData$X190-mean(turbineTestData$X190))^2)
+testR2=1-testSSE/testSST
+testR2
+```
+we can see that test R2 is slightly improved than the training R2. 
 
-#see how the data is plotted
+__see how the predcitions and actual data is plotted__
+```{r}
 plot(turbineTestData$X190)
 points(predictions,col="red")
-
-
 ```
-
-
-
-
-
-All the variables
-
-```{r}
-model2=lm(turbineData$X190~.,data=turbineData)
-summary(model2)
-#data is highly correlated
-cor(turbineData)
-
-#beeter model as the R2 error is less than the earlier version
-model3=lm(turbineData$X190~turbineData$X180+turbineData$X186+turbineData$X188+turbineData$X189+turbineData$X191+turbineData$X193+turbineData$X200)
-summary(model3)
-
-par(mfrow=c(2,2))
-
-plot(model3)
-
-SSE3=sum(model3$residuals^2)
-RMSE3=sqrt(SSE3/nrow(turbineData))
-
-
-
-
-#read the test data
-
-
-
-####I DONT THINK THIS IS REQUIRED ######
-
-which.max(hatvalues(model3)) 
-
-residplot <- function(fit, nbreaks=10){
-  z <- rstudent(fit)
-  hist(z, breaks=nbreaks, freq=FALSE,xlab="Studentized Residual",main="Distribution of Errors")
-  rug(jitter(z), col="brown")
-  curve(dnorm(x, mean=mean(z), sd=sd(z)),add=TRUE, col="blue", lwd=2)
-  lines(density(z)$x, density(z)$y,col="red", lwd=2, lty=2)
-  #legend("topright",legend = c( "Normal Curve", "Kernel Density Curve"),lty=1:2, col=c("blue","red"), cex=.7)
-}
-
-residplot(model3)
-library(car)
-spreadLevelPlot(model3)
-
-model4=lm(turbineData$X190^0.48~turbineData$X180+turbineData$X186+turbineData$X188+turbineData$X189+turbineData$X191+turbineData$X193+turbineData$X200)
-
-summary(model4)
-
-spreadLevelPlot(model4)
-
-plot(model4)
-#############
-
-library(tree)
-tree.train=tree(X190~.,data=turbineData)
-plot(tree.train)
-text(tree.train,pretty=0)
-
-
-
-
-
-```
-```{r}
-library(leaps)
-regfit.full=regsubsets(X190 ~.,turbineData)
-summary(regfit.full)
-```
-
-
-Few approaches
-
-1. Break the data into train and test
-2. You want to reach to a model using a test set created from the known samples
-3. Apply the minear regression (calculate the RMSE)
-4. Apply the tree methods and then calculate the RMSE
-5. Apply the non linear methods like spline etc to get the model
-
-Once you get the model with a good RMSE and error you wil use this as the one for the test data provided
-
-
 
