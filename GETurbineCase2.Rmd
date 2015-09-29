@@ -178,6 +178,86 @@ SO in this case there is no difference in the bushy and the prune trees
 
 ```{r}
 #lets see what happens if we use the CART
+library(rpart)
+library(rpart.plot)
+tree.CART=rpart(X190~.,data=turbineTrainData)
+prp(tree.CART)
+
+CART.pred=predict(tree.CART)
+
+MSE.CART=mean((CART.pred-turbineTrainData$X190)^2)
+RMSE.CART=sqrt(MSE.CART)
+
+#this tree seems to be similar to the one drawn using the tree()
+```
+
+#Bagging & Random Forest approach
+
+```{r}
+library(randomForest)
+#trying bagging using the whole set of parameters=11
+bag.turbine=randomForest(X190 ~.,data=turbineTrainData,mtry=18,importance=TRUE)
+#this plots a curve chowing how the error went down from 1 tree to 25 tree
+plot(bag.turbine)
+bag.turbine
+
+#as per the model the important variables are
+#X186,X187,188,189,191,193,198,200
+
+#NOW THE PREDICTIONS
+bag.predict=predict(bag.turbine)
+MSE.bag=mean((bag.predict-turbineTrainData$X190)^2)
+RMSE.bag=sqrt(MSE.bag)
+
+#this is similar to the model4 linear regression
+
+#RF
+
+
+oob.err = double(18)
+test.err = double(18)
+for(i in 1:18){
+  fit=randomForest(X190 ~.,data=turbineTrainData,mtry=i)
+  oob.err[i]=fit$mse[500]
+  pred=predict(fit)
+  #test.err[i]=mean((pred-turbineTrainData$X190)^2)
+  cat(i," ")
+}
+
+oob.err
+#test.err
+
+plot(oob.err)
+
+#we can see that oob.err is minimum at 7
+rf.turbine=randomForest(X190 ~.,data=turbineTrainData,mtry=7,importance=TRUE)
+rf.turbine
+summary(rf.turbine)
+rf.predict=predict(rf.turbine)
+MSE.rf=mean((rf.predict-turbineTrainData$X190)^2)
+RMSE.rf=sqrt(MSE.rf)
+
+#matplot(1:i,cbind(test.err,oob.err),pch=19,col=("red","blue"),type="b",ylab="MSE")
 
 ```
+
+Boosting
+
+```{r}
+library(gbm)
+#set.seed(1)
+boost.tree=gbm(X190~.,data=turbineTrainData,distribution = "gaussian",n.trees = 5000,interaction.depth = 4)
+summary(boost.tree)
+
+boost.predictions=predict(boost.tree,n.trees=5000)
+MSE.boost=mean((boost.predictions-turbineTrainData$X190)^2)
+RMSE.boost=sqrt(MSE.boost)
+```
+
+RMSE.boost is the minimum
+
+```{r}
+
+```
+
 
