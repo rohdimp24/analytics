@@ -257,6 +257,13 @@ RMSE.boost=sqrt(MSE.boost)
 RMSE.boost is the minimum
 
 ```{r}
+#read test
+turbineTestData<-read.csv("test.csv")
+summary(turbineTestData)
+
+predictions=predict(boost.tree,newdata=turbineTestData,n.trees=5000)
+MSE.Test=mean((predictions-turbineTestData$X190)^2)
+RMSE.Test=sqrt(MSE.Test)
 
 ```
 
