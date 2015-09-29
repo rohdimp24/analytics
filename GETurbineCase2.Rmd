@@ -47,7 +47,7 @@ So the historams suggest that the distribution is not normal. and there are vari
 
 ```{r}
 #correlations
-cor(turbineTestData)
+cor(turbineTrainData)
 
 #the correlation data shows that the data is highly correlated. there are many columns which have a correlation of >0.95
 #so we will have to remove the columns to avoid multicolinearity issues
@@ -77,6 +77,7 @@ trainRSqr2=summary(model2)$adj.r.squared
 #get the correlation for the significant columns
 subDataFrame<-turbineTrainData[c('X180','X186','X188','X189','X190','X191','X193','X200')]
 corSubData<-cor(subDataFrame)
+corSubData
 
 ```
   
@@ -113,3 +114,70 @@ trainRSqr4=summary(model4)$adj.r.squared
 
 ```
 Even though the R2 is going down little bit when we remove the variables but the model is still OK . It is always better to have simple models than the complicated ones
+
+Now finding teh diagnostics
+```{r}
+par(mfrow=c(2,2))
+#diagnostics
+plot(model4)
+
+#outliers
+library(car)
+outliers=outlierTest(model4)
+outliers
+
+#get the high lebvergare points
+highLevPoints<-influencePlot(model4)
+highLevPoints
+```
+
+```{r}
+par(mfrow=c(1,1))
+plot(turbineTrainData$X186)
+points(turbineTrainData$X189,col="red")
+points(turbineTrainData$X191,col="blue")
+points(turbineTrainData$X190,col="green")
+
+
+predictions=predict(model4)
+
+
+```
+
+
+```{r}
+library(tree)
+par(mfrow=c(2,2))
+tree.train=tree(X190~.,data=turbineTrainData)
+plot(tree.train)
+text(tree.train,pretty=0)
+
+tree.pred=predict(tree.train)
+MSE.bushy=mean((tree.pred-turbineTrainData$X190)^2)
+RMSE.bushy=sqrt(MSE.bushy)
+
+
+#now pruning the trees
+cv.turbine = cv.tree(tree.train)
+cv.turbine
+plot(cv.turbine)
+plot(cv.turbine$size ,cv.turbine$dev ,type='b')
+
+#so the 6 is the optimal size
+prune.turbine = prune.tree(tree.train, best = 6)
+plot(prune.turbine)
+text(prune.turbine,pretty=0)
+
+prune.pred=predict(prune.turbine)
+MSE.prune=mean((prune.pred-turbineTrainData$X190)^2)
+RMSE.prune=sqrt(MSE.prune)
+
+
+```
+SO in this case there is no difference in the bushy and the prune trees
+
+```{r}
+#lets see what happens if we use the CART
+
+```
+
