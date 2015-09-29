@@ -109,8 +109,9 @@ trainSSE4=sum(model4$residuals^2)
 trainRMSE4=sqrt(trainSSE4/nrow(turbineTrainData))
 trainR2Calc4=1-trainSSE4/trainSST
 trainRSqr4=summary(model4)$adj.r.squared
-
-
+MSE.linreg=trainSSE4
+RMSE.linreg=trainRMSE4
+summary(model4)$sigma #same as the RMSE
 
 ```
 Even though the R2 is going down little bit when we remove the variables but the model is still OK . It is always better to have simple models than the complicated ones
@@ -254,17 +255,68 @@ MSE.boost=mean((boost.predictions-turbineTrainData$X190)^2)
 RMSE.boost=sqrt(MSE.boost)
 ```
 
-RMSE.boost is the minimum
+__summary of all the RMSE__
+```{r}
+#linerreg
+MSE.linreg
+RMSE.linreg
+
+#tree
+MSE.bushy
+RMSE.bushy
+
+#bagging
+MSE.bag
+RMSE.bag
+
+#Random Forest
+MSE.rf
+RMSE.rf
+
+#boosting
+MSE.boost
+RMSE.boost
+
+
+```
+
+Training error in case of Boosting (RMSE.boost) is the minimum.
 
 ```{r}
 #read test
 turbineTestData<-read.csv("test.csv")
 summary(turbineTestData)
 
-predictions=predict(boost.tree,newdata=turbineTestData,n.trees=5000)
-MSE.Test=mean((predictions-turbineTestData$X190)^2)
-RMSE.Test=sqrt(MSE.Test)
+```
+The test error from the boost
+
+```{r}
+#linear regression
+predLinReg=predict(model4,newdata=turbineTestData)
+MSE.test.linreg=sum((turbineTestData$X190-predLinReg)^2)
+RMSE.test.linreg=sqrt(MSE.test.linreg/nrow(turbineTestData))
+
+#tree
+tree.test.pred=predict(tree.train,newdata=turbineTestData)
+MSE.test.bushy=mean((tree.pred-turbineTestData$X190)^2)
+RMSE.test.bushy=sqrt(MSE.test.bushy)
+
+#bagging
+bag.test.pred=predict(bag.turbine,newdata=turbineTestData)
+MSE.test.bag=mean((bag.test.pred-turbineTestData$X190)^2)
+RMSE.test.bag=sqrt(MSE.test.bag)
+
+#Rf
+rf.test.pred=predict(rf.turbine,newdata=turbineTestData)
+MSE.test.rf=mean((rf.test.pred-turbineTestData$X190)^2)
+RMSE.test.rf=sqrt(MSE.test.rf)
+
+#boost
+boost.test.pred=predict(boost.tree,newdata=turbineTestData,n.trees=5000)
+MSE.test.boost=mean((boost.test.pred-turbineTestData$X190)^2)
+RMSE.test.boost=sqrt(MSE.test.boost)
+
 
 ```
 
-
+We found that even though the training error in case of boosting was lowest , the test error for the linear regression tree is the lowest
