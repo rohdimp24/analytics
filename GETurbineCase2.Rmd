@@ -333,11 +333,11 @@ plot(turbineTestData$X190)
 points(predictions,col="red")
 points(predLinReg,col="blue")
 
-diffLinReg=turbineTestData$X190-predictions
-diffMultReg=turbineTestData$X190-predLinReg
-plot(diffLinReg,type="l")
-points(diffMultReg,col="red",type="l")
-boxplot(diffLinReg,diffMultReg,names=c("DiffLinReg","DiffMultReg"))
+deviationLinReg=turbineTestData$X190-predictions
+deviationMultReg=turbineTestData$X190-predLinReg
+plot(deviationLinReg,type="l")
+points(deviationMultReg,col="red",type="l")
+boxplot(deviationLinReg,deviationMultReg,names=c("deviationLinReg","deviationMultReg"))
 
 ```
 we can clearly see that there are more number of outliers if we try to see the deviation from the actual value in case of the linear reg using only 189
