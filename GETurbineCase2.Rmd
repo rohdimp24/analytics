@@ -323,11 +323,11 @@ We found that even though the training error in case of boosting was lowest , th
 
 ```{r}
 #can we plot the points and then see which model has predicted better for the majority of the points
-linreg1=lm(X190~X189,data=turbineTrainData)
-predictionData=predict(linreg1,newdata=turbineTestData,interval="prediction")
+linreg=lm(X190~X189,data=turbineTrainData)
+predictionData=predict(linreg,newdata=turbineTestData,interval="prediction")
 predictions<-predictionData[1:nrow(predictionData)]
 
-par(mfrow=c(1,1))
+par(mfrow=c(2,2))
 
 plot(turbineTestData$X190)
 points(predictions,col="red")
