@@ -1,0 +1,115 @@
+---
+title: "GETurbine"
+output: html_document
+---
+•  Now use the data from the entire wind farm to perform exploratory analysis and create a predictive model of turbine 190’s power given the power from the rest of the farm.  Does this improve the estimate from above?  
+
+
+```{r}
+filenameToRead<-"train.csv"
+turbineTrainData<-read.csv(filenameToRead)
+str(turbineTrainData)
+
+```
+
+Performing some explorations
+
+```{r}
+#Find the summary of the values
+summary(turbineTrainData)
+
+```
+summary shows that there are some negative values too ..why are there negative readings?
+
+Now drawing the box plts and the histograms to see the disribution.
+
+
+```{r}
+#boxplots
+boxplot(turbineTrainData)
+
+```
+The box plot shows that for some of the turbines are producing the data similar to X190 while there are others which are not similar. So they might not have much impact while developing the model
+```{r}
+#hist
+
+cc<-names(turbineTrainData)
+length(cc)
+for(j in 2:length(cc)){
+  print(j)
+  hist(turbineTrainData[,cc[j]],xlab=cc[j])
+  j
+}
+
+```
+So the historams suggest that the distribution is not normal. and there are variations in the distribution
+
+
+```{r}
+#correlations
+cor(turbineTestData)
+
+#the correlation data shows that the data is highly correlated. there are many columns which have a correlation of >0.95
+#so we will have to remove the columns to avoid multicolinearity issues
+
+```
+
+
+
+```{r}
+model1=lm(X190~.,data=turbineTrainData)
+summary(model1)
+trainSSE1=sum(model1$residuals^2)
+trainRMSE1=sqrt(trainSSE1/nrow(turbineTrainData))
+trainSST=sum((turbineTrainData$X190-mean(turbineTrainData$X190))^2)
+trainR2Calc1=1-trainSSE1/trainSST
+trainRSqr1=summary(model1)$adj.r.squared
+
+#the model shows that some of the variables are not significant
+#so we remove the coefficients and then try to fit the model again
+model2=lm(X190~X180+X186+X188+X189+X191+X193+X200,data=turbineTrainData)
+summary(model2)
+trainSSE2=sum(model2$residuals^2)
+trainRMSE2=sqrt(trainSSE2/nrow(turbineTrainData))
+trainR2Calc2=1-trainSSE2/trainSST
+trainRSqr2=summary(model2)$adj.r.squared
+
+#get the correlation for the significant columns
+subDataFrame<-turbineTrainData[c('X180','X186','X188','X189','X190','X191','X193','X200')]
+corSubData<-cor(subDataFrame)
+
+```
+  
+We can see that some of the turbines are quite related to each other 
+*186 is quite related to 188,189,190 ..the range of values follows the similar trend this is evident from the box plot also
+*188 ans 189 are highly correlated so one of them should be there in the model
+*189 is highly correlated to 190 so we need to keeo it. that means we can remove the 188
+*191 is highly correlated to 190 so we need to keep it
+*193 and 191 are highly correlated. so we can keep one of them . 191 is highy related to 190 so we keep it and remove 193 
+*200 is relted to 190, 189,191
+
+
+So the model after removing the correlted independent variable 
+```{r}
+
+model3=lm(X190~X180+X186+X189+X191+X200,data=turbineTrainData)
+summary(model3)
+trainSSE3=sum(model3$residuals^2)
+trainRMSE3=sqrt(trainSSE3/nrow(turbineTrainData))
+trainR2Calc3=1-trainSSE3/trainSST
+trainRSqr3=summary(model3)$adj.r.squared
+
+# in this model even 180 is not that significant so we can as well remove 180
+
+
+model4=lm(X190~X186+X189+X191+X200,data=turbineTrainData)
+summary(model4)
+trainSSE4=sum(model4$residuals^2)
+trainRMSE4=sqrt(trainSSE4/nrow(turbineTrainData))
+trainR2Calc4=1-trainSSE4/trainSST
+trainRSqr4=summary(model4)$adj.r.squared
+
+
+
+```
+Even though the R2 is going down little bit when we remove the variables but the model is still OK . It is always better to have simple models than the complicated ones
