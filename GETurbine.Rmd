@@ -43,6 +43,7 @@ hist(turbineTrainData$X189)
 
 hist(turbineTrainData$X190)
 
+#the distribution is kind of skewed towards left 
 
 #correlations
 cor(turbineTrainData$X189,turbineTrainData$X190)
@@ -113,6 +114,7 @@ par(mfrow=c(2,2))
 #diagnostics
 plot(linreg1)
 
+
 par(mfrow=c(1,1))
 #plotting the outliers
 plot(fitted.values(linreg1),rstudent(linreg1))
@@ -175,3 +177,14 @@ plot(turbineTestData$X190)
 points(predictions,col="red")
 ```
 
+
+
+trying with the log transformation
+```{r}
+xx<-lm(X190~X189+I(X189^2),data=turbineTrainData)
+summary(xx)
+plot(xx)
+
+skewness(turbineTrainData$X189)
+
+```

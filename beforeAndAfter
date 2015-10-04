@@ -1,0 +1,60 @@
+Call:
+lm(formula = X190 ~ X189, data = turbineTrainData)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-742.01  -75.41   -6.22   69.72  558.14 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 35.001737   7.456947   4.694 3.06e-06 ***
+X189         0.922244   0.009383  98.285  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 131.5 on 997 degrees of freedom
+Multiple R-squared:  0.9064,	Adjusted R-squared:  0.9064 
+F-statistic:  9660 on 1 and 997 DF,  p-value: < 2.2e-16
+
+
+----------------------
+test
+141.8988
+0.9226546
+
+
+
+
+===================
+Train on multiple variable
+
+Call:
+lm(formula = X190 ~ X186 + X189 + X191 + X200, data = turbineTrainData)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-655.75  -50.08    5.42   53.85  496.55 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -4.31763    6.23485  -0.692    0.489    
+X186         0.16451    0.02228   7.382 3.28e-13 ***
+X189         0.33520    0.02677  12.522  < 2e-16 ***
+X191         0.36401    0.02598  14.010  < 2e-16 ***
+X200         0.09723    0.02015   4.826 1.61e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 105.3 on 994 degrees of freedom
+Multiple R-squared:  0.9402,	Adjusted R-squared:  0.9399 
+F-statistic:  3904 on 4 and 994 DF,  p-value: < 2.2e-16
+
+
+
+
+
+test
+116
+0.9481
+
+

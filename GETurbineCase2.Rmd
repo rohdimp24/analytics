@@ -120,9 +120,9 @@ Now finding teh diagnostics
 ```{r}
 par(mfrow=c(2,2))
 #diagnostics
-plot(model4)
+plot(model4,col="white")
 
-#outliers
+ #outliers
 library(car)
 outliers=outlierTest(model4)
 outliers
@@ -295,6 +295,9 @@ The test error from the boost
 predLinReg=predict(model4,newdata=turbineTestData)
 MSE.test.linreg=sum((turbineTestData$X190-predLinReg)^2)
 RMSE.test.linreg=sqrt(MSE.test.linreg/nrow(turbineTestData))
+
+SST=sum((turbineTestData$X190-mean(turbineTestData$X190))^2)
+
 
 #tree
 tree.test.pred=predict(tree.train,newdata=turbineTestData)
