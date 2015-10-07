@@ -26,7 +26,13 @@ Now drawing the box plts and the histograms to see the disribution.
 
 ```{r}
 #boxplots
-boxplot(turbineTrainData)
+turbines<-names(turbineTrainData)
+boxplot(turbineTrainData,names=turbines,main="Box plot comparing all turbines")
+abline(a=median(turbineTrainData$X190),b=0,col="red",lty=2)
+abline(a=summary(turbineTrainData$X190)[2],b=0,col="blue",lty=2)
+abline(a=summary(turbineTrainData$X190)[5],b=0,col="blue",lty=2)
+
+
 
 ```
 The box plot shows that for some of the turbines are producing the data similar to X190 while there are others which are not similar. So they might not have much impact while developing the model
@@ -148,9 +154,9 @@ predictions=predict(model4)
 
 ```{r}
 library(tree)
-par(mfrow=c(2,2))
+#par(mfrow=c(2,2))
 tree.train=tree(X190~.,data=turbineTrainData)
-plot(tree.train)
+plot(tree.train,main="Bushy Decision tree fitting the model")
 text(tree.train,pretty=0)
 
 tree.pred=predict(tree.train)
@@ -161,8 +167,8 @@ RMSE.bushy=sqrt(MSE.bushy)
 #now pruning the trees
 cv.turbine = cv.tree(tree.train)
 cv.turbine
-plot(cv.turbine)
-plot(cv.turbine$size ,cv.turbine$dev ,type='b')
+plot(cv.turbine,main="Different ")
+plot(cv.turbine$size ,cv.turbine$dev ,type='b', main="Plot between size of the tree and the deviance",xlab = "Size of tree", ylab= "deviance")
 
 #so the 6 is the optimal size
 prune.turbine = prune.tree(tree.train, best = 6)
@@ -228,7 +234,7 @@ for(i in 1:18){
 oob.err
 #test.err
 
-plot(oob.err)
+plot(oob.err,lty=2,col="red",main="oob error at different number of variables in the model",xlab="Number of variables")
 
 #we can see that oob.err is minimum at 7
 rf.turbine=randomForest(X190 ~.,data=turbineTrainData,mtry=7,importance=TRUE)
@@ -295,29 +301,44 @@ The test error from the boost
 predLinReg=predict(model4,newdata=turbineTestData)
 MSE.test.linreg=sum((turbineTestData$X190-predLinReg)^2)
 RMSE.test.linreg=sqrt(MSE.test.linreg/nrow(turbineTestData))
+RMSE.test.linreg
 
 SST=sum((turbineTestData$X190-mean(turbineTestData$X190))^2)
+testR2=1-MSE.test.linreg/SST
+testR2
 
 
 #tree
 tree.test.pred=predict(tree.train,newdata=turbineTestData)
 MSE.test.bushy=mean((tree.pred-turbineTestData$X190)^2)
 RMSE.test.bushy=sqrt(MSE.test.bushy)
+RMSE.test.bushy
 
 #bagging
 bag.test.pred=predict(bag.turbine,newdata=turbineTestData)
 MSE.test.bag=mean((bag.test.pred-turbineTestData$X190)^2)
 RMSE.test.bag=sqrt(MSE.test.bag)
+RMSE.test.bag
 
 #Rf
 rf.test.pred=predict(rf.turbine,newdata=turbineTestData)
 MSE.test.rf=mean((rf.test.pred-turbineTestData$X190)^2)
 RMSE.test.rf=sqrt(MSE.test.rf)
+RMSE.test.rf
 
 #boost
 boost.test.pred=predict(boost.tree,newdata=turbineTestData,n.trees=5000)
 MSE.test.boost=mean((boost.test.pred-turbineTestData$X190)^2)
 RMSE.test.boost=sqrt(MSE.test.boost)
+RMSE.test.boost
+
+```
+
+```{r}
+predLinReg=predict(model4,newdata=turbineTestData)
+plot(turbineTestData$X190,col="grey",main="Overlap of observed and fitted values on test data")
+points(predLinReg,col="red")
+points(predictions,col="blue")
 
 
 ```
@@ -338,7 +359,7 @@ points(predLinReg,col="blue")
 
 deviationLinReg=turbineTestData$X190-predictions
 deviationMultReg=turbineTestData$X190-predLinReg
-plot(deviationLinReg,type="l")
+plot(deviationLinReg,type="l",col="blue",main="residuals of simple regression versus multivariate regression")
 points(deviationMultReg,col="red",type="l")
 boxplot(deviationLinReg,deviationMultReg,names=c("deviationLinReg","deviationMultReg"))
 

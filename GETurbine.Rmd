@@ -34,14 +34,28 @@ Now drawing the box plts and the histograms to see the disribution
 ```{r}
 #boxplots
 
-boxplot(turbineTrainData$X190,turbineTrainData$X189,names=c("X190","X189"))
+boxplot(turbineTrainData$X189,turbineTrainData$X190,names=c("turbine 189","turbine 190"),main="Box Plots comparing turbine 189 & 190")
+
+abline(a=median(turbineTrainData$X189),b=0,col="red",lty=2)
 
 #boxplot is showing that the distribution of the datapoints in the quantiles is similar. The median is almost the same which indicates that X189 can be a good distribution for making predictions for X190
 
-#hist
-hist(turbineTrainData$X189)
+#inter quartile ranges
+IQR(turbineTrainData$X189, na.rm = FALSE, type = 7)
+IQR(turbineTrainData$X190, na.rm = FALSE, type = 7)
 
-hist(turbineTrainData$X190)
+#hist
+par(mfrow=c(2,2))
+hist(turbineTrainData$X189,main="Histogram for turbine189",xlab ='Power Values for 189')
+density189<-density(turbineTrainData$X189)
+plot(density189, main="Density for turbine189",xlab ='Power Values for 189')
+polygon(density189, col="red", border="blue")
+
+hist(turbineTrainData$X190,main="Histogram for turbine190",xlab ='Power Values for 190')
+density190<-density(turbineTrainData$X190)
+plot(density190, main="Density for turbine190",xlab ='Power Values for 190')
+polygon(density190, col="red", border="blue")
+
 
 #the distribution is kind of skewed towards left 
 
@@ -49,7 +63,7 @@ hist(turbineTrainData$X190)
 cor(turbineTrainData$X189,turbineTrainData$X190)
 
 #plot the points with the linear regression line
-plot(turbineTrainData$X189,turbineTrainData$X190)
+plot(turbineTrainData$X189,turbineTrainData$X190,xlab="Power values turbine 189", ylab="Power values turbine 190", main="Scatter Plot between turbine 190 and turbine 189")
 #abline(lm(turbineTrainData$X190~turbineTrainData$X189), col="red")
 
 
@@ -65,7 +79,7 @@ linreg1=lm(X190~X189,data=turbineTrainData)
 summary(linreg1)
 
 #plot the points with the linear regression line
-plot(turbineTrainData$X189,turbineTrainData$X190)
+plot(turbineTrainData$X189,turbineTrainData$X190,xlab="Power values turbine 189", ylab="Power values turbine 190", main="Scatter Plot between turbine 190 & 189 with regression line",col="grey")
 abline(lm(turbineTrainData$X190~turbineTrainData$X189), col="red")
 
 
@@ -87,6 +101,12 @@ trainRMSE
 trainSST=sum((turbineTrainData$X190-mean(turbineTrainData$X190))^2)
 trainR2=1-trainSSE/trainSST
 trainR2
+
+#another way to calculate
+trainMSE<-mean((turbineTrainData$X190 -linreg1$fitted.values)^2)
+trainRMSE<-sqrt(MSE)
+
+
 ```
 
 __Draw the standard error lines__ 
@@ -112,7 +132,7 @@ __Performing some linear regression diagnostics on the above model__
 
 par(mfrow=c(2,2))
 #diagnostics
-plot(linreg1)
+plot(linreg1,col="grey")
 
 
 par(mfrow=c(1,1))
@@ -185,6 +205,6 @@ xx<-lm(X190~X189+I(X189^2),data=turbineTrainData)
 summary(xx)
 plot(xx)
 
-skewness(turbineTrainData$X189)
+
 
 ```
