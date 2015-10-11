@@ -51,3 +51,14 @@ model1=lm(X190~.,data=turbineTrainData)
 summary(model1)
 
 ```
+
+
+Regression Model2
+
+After removing the not so important variables
+```{r}
+model2=lm(X190~X180+X186+X188+X189+X191+X193+X200,data=turbineTrainData)
+summary(model2)
+
+```
+
