@@ -103,7 +103,7 @@ So the model4 is the final regression model
 
 __Non Linear models __
 
-Decision tree
+__Decision tree__
 
 Creating a Bushy tree
 ```{r}
@@ -128,4 +128,27 @@ plot(cv.turbine$size ,cv.turbine$dev ,type='b', main="Plot between size of the t
 ```
 This gives the tree size for which the deviance will be the smallest. In this case it is at 6 which is also the size of the bushy tree. so no pruning is required
 
+Note that the leaves of the tree are similar to the independent variables in the final regression model 
+
+__Bagging__
+
+```{r}
+
+library(randomForest)
+bag.turbine=randomForest(X190 ~.,data=turbineTrainData,mtry=18,importance=TRUE)
+bag.predict=predict(bag.turbine)
+MSE.bag=mean((bag.predict-turbineTrainData$X190)^2)
+RMSE.bag=sqrt(MSE.bag)
+RMSE.bag
+
+```
+
+Lets see the importance varaibles 
+
+```{r}
+
+importance(bag.turbine)
+
+```
+we find that similar variables as in the case of the regression model have been given the more importance
 
