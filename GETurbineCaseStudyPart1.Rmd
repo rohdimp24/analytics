@@ -3,6 +3,12 @@ title: "GETurbineCaseStudyPart1"
 output: html_document
 ---
 
+This is the solution for the first question
+It is recommended to first analyze the performance of turbine 190 compared to neighboring turbine 189.  Consider the error if turbine 189 is used as an estimator of turbine 190.  How well does this estimator perform?
+
+
+
+
 __Read the data first__
 
 ```{r}
