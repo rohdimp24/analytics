@@ -91,6 +91,7 @@ model4=lm(X190~X186+X189+X191+X200,data=turbineTrainData)
 summary(model4)
 trainSSE4=sum(model4$residuals^2)
 trainRMSE4=sqrt(trainSSE4/nrow(turbineTrainData))
+trainSST=sum((turbineTrainData$X190-mean(turbineTrainData$X190))^2)
 trainR2Calc4=1-trainSSE4/trainSST
 trainRSqr4=summary(model4)$adj.r.squared
 MSE.multipleLinreg=trainSSE4
