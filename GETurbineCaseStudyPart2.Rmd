@@ -101,3 +101,31 @@ summary(model4)$sigma
 
 So the model4 is the final regression model
 
+__Non Linear models __
+
+Decision tree
+
+Creating a Bushy tree
+```{r}
+library(tree)
+tree.train=tree(X190~.,data=turbineTrainData)
+plot(tree.train)
+text(tree.train,pretty=0)
+
+tree.pred=predict(tree.train)
+MSE.bushy=mean((tree.pred-turbineTrainData$X190)^2)
+RMSE.bushy=sqrt(MSE.bushy)
+RMSE.bushy
+
+```
+
+Determining the prune levels
+
+```{r}
+cv.turbine = cv.tree(tree.train)
+cv.turbine
+plot(cv.turbine$size ,cv.turbine$dev ,type='b', main="Plot between size of the tree and the deviance",xlab = "Size of tree", ylab= "deviance")
+```
+This gives the tree size for which the deviance will be the smallest. In this case it is at 6 which is also the size of the bushy tree. so no pruning is required
+
+
