@@ -225,3 +225,41 @@ RMSE.test.boost
 
 ```
 We find that the regression model is the best
+
+
+__Comparing X189 based model with the multivariable model__
+```{r}
+
+linreg=lm(X190~X189,data=turbineTrainData)
+multipleLinReg=lm(X190~X186+X189+X191+X200,data=turbineTrainData)
+
+```
+
+Plotting the predictions by simple regression compared with that by the multiple variable regression
+
+```{r}
+par(xpd=T, mar=par()$mar+c(0,0,0,6))
+linreg=lm(X190~X189,data=turbineTrainData)
+predMultiReg=predict(model4,newdata=turbineTestData)
+predLinReg=predict(linreg,newdata=turbineTestData)
+plot(turbineTestData$X190,col="grey",main="Simple Regression vs Multivariable Reg. on test data")
+points(predMultiReg,col="red")
+points(predLinReg,col="blue")
+legend(1570,1570,c("Actual", "Simple Reg","Multivariable Reg"), pch = c(1,1,1), col = c('grey','blue','red'))
+par(mar=c(5, 4, 4, 2) + 0.1)
+
+```
+
+comparing the deviations of the residuals by both the models
+
+```{r}
+par(xpd=T, mar=par()$mar+c(0,0,0,6))
+deviationLinReg=turbineTestData$X190-predLinReg
+deviationMultReg=turbineTestData$X190- predMultiReg
+plot(deviationLinReg,type="l", col="blue", main="Residuals of Simple Reg vs Multivariable Reg",ylab="Residuals")
+points(deviationMultReg,col="red",type="l")
+legend(1570,800,c("Actual", "Simple Reg","Multivariable Reg"), pch = c(1,1,1), col = c('grey','blue','red'))
+par(mar=c(5, 4, 4, 2) + 0.1)
+
+
+```
