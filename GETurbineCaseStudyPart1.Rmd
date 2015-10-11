@@ -127,12 +127,44 @@ We see that about 7.5% points are not well estimated by the model
 __Performing some linear regression diagnostics on the above model__
 ```{r}
 #diagnostics
->plot(linreg1, col="grey")
+plot(linreg1, col="grey")
 ```
 
 We can see that the diagnostic graphs show that the model does not have the issues:  
 * non-linearity
 * error between the actual and fitted value is normally distributed
 * no Heteroscedasticity
+
+Run the model on the test data to see the predictions
+```{r}
+#read the test data
+turbineTestData<-read.csv("test.csv")
+summary(turbineTestData)
+
+predictions=predict(linreg1,newdata=turbineTestData)
+
+head(predictions)
+str(turbineTestData)
+
+testErrorDiff=turbineTestData$X190-predictions
+testSSE=sum(testErrorDiff^2)
+
+testRMSE=sqrt(testSSE/nrow(turbineTestData))
+testRMSE
+
+
+#alternatively
+testMSE<-mean((turbineTestData$X190 -predictions)^2)
+testRMSE<-sqrt(testMSE)
+
+#mean to be calculated on the trainig set
+testErrorDiff=turbineTestData$X190-predictions
+testSSE=sum(testErrorDiff^2)
+testSST=sum((turbineTestData$X190-mean(turbineTestData$X190))^2)
+testR2=1-testSSE/testSST
+testR2
+
+```
+we can see that test R2 is slightly improved than the training R2. 
 
 
