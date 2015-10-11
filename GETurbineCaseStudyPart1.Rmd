@@ -1,0 +1,14 @@
+---
+title: "GETurbineCaseStudyPart1"
+output: html_document
+---
+
+__Read the data first__
+
+```{r}
+
+filenameToRead<-"train.csv"
+turbineTrainData<-read.csv(filenameToRead)
+str(turbineTrainData)
+
+```
