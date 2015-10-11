@@ -1,0 +1,23 @@
+---
+title: "GETurbineCaseStudyPart2"
+output: html_document
+---
+
+read the training data
+
+```{r}
+filenameToRead<-"train.csv"
+turbineTrainData<-read.csv(filenameToRead)
+str(turbineTrainData)
+
+```
+
+Performing some explorations
+
+```{r}
+#Find the summary of the values
+summary(turbineTrainData)
+
+```
+
+
