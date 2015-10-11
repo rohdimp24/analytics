@@ -195,7 +195,7 @@ Now applying the various models to on the test data
 
 ```{r}
 #Regression Model
-predMulitReg=predict(model4,newdata=turbineTestData)
+predMultiReg=predict(model4,newdata=turbineTestData)
 MSE.test.multireg=sum((turbineTestData$X190-predMultiReg)^2)
 RMSE.test.multireg=sqrt(MSE.test.multireg/nrow(turbineTestData))
 RMSE.test.multireg
