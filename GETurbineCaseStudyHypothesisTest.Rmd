@@ -1,0 +1,91 @@
+---
+title: "GETurbineCaseStudyHypothesisTest"
+output: html_document
+---
+
+Read the training data & the testing data
+
+```{r}
+turbineTrainData<-read.csv("train.csv")
+turbineTestData<-read.csv("test.csv")
+
+```
+
+Generate the samples for the training data of turbine 190 and calculate the mean for each sample
+```{r}
+sampleTrainMeans=rep(0,10000)
+for(i in 1:10000)
+{
+  sampleTrainMeans[i]<-mean(sample(turbineTrainData$X190,500))
+
+}
+
+
+```
+calculating the mean of all the sample means
+
+```{r}
+trainSampleMean<-mean(sampleTrainMeans)
+```
+
+Calculate the standard error
+
+```{r}
+trainSE<-sd(sampleTrainMeans)
+```
+
+Population standard deviation
+
+```{r}
+trainSD<-trainSE*sqrt(500)
+
+```
+
+Draw the distribution and the one-test limit
+
+```{r}
+
+CIUpperLimit<-trainSampleMean+1.65*trainSE
+myhist <- hist(sampleTrainMeans,col="red")
+multiplier <- myhist$counts / myhist$density
+mydensity <- density(sampleTrainMeans)
+mydensity$y <- mydensity$y * multiplier[1]
+
+plot(myhist,col="grey",main="Distribution of sample means for turbine 190",xlab ="sample mean value")
+lines(mydensity,col="blue")
+abline(v=trainSampleMean,col="red")
+abline(v=CIUpperLimit,col="green")
+#abline(v=685,col="blue")
+#note our sample mean is 863
+text(trainSampleMean,-10,"mean")
+text(CIUpperLimit,-10,"alpha")
+
+```
+
+Get the random sample from the testing data of size 500
+
+```{r}
+testSample=sample(turbineTestData$X190,500)
+testSampleMean=mean(testSample)
+testSampleMean
+testSampleMean<CIUpperLimit
+
+```
+
+So the above sample is beyond the alpha limit
+
+Lets see if there is any sample from the test data which can be within the limit
+
+```{r}
+
+sampleTestMeans=rep(0,1000)
+for(i in 1:1000)
+{
+  sampleTestMeans[i]<-mean(sample(turbineTestData$X190,500))
+}
+
+#get the sample whose mean is less than CIUpperLimit 
+which(sampleTestMeans<CIUpperLimit)
+
+```
+So we see even taking 1000 samples we cannot find any sample that can lie in the region less than alpha
