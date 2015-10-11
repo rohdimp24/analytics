@@ -152,3 +152,17 @@ importance(bag.turbine)
 ```
 we find that similar variables as in the case of the regression model have been given the more importance
 
+__Random Forest__
+This is a special case of the bagging with the mtry = sqrt of the number of the predictor variables
+
+```{r}
+rf.turbine=randomForest(X190 ~.,data=turbineTrainData,mtry=5,importance=TRUE)
+rf.turbine
+summary(rf.turbine)
+rf.predict=predict(rf.turbine)
+MSE.rf=mean((rf.predict-turbineTrainData$X190)^2)
+RMSE.rf=sqrt(MSE.rf)
+RMSE.rf
+```
+
+the random forest has imporved a little bit on the bagging model
