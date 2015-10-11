@@ -26,3 +26,20 @@ summary(turbineTrainData$X190)
 ```
 The summary clearly shows that the X190 and X189 have similar distribution
 
+Now drawing the box plts to see the disribution
+
+```{r}
+#boxplots
+
+boxplot(turbineTrainData$X189,turbineTrainData$X190,names=c("turbine 189","turbine 190"),main="Box Plots comparing turbine 189 & 190")
+
+abline(a=median(turbineTrainData$X189),b=0,col="red",lty=2)
+
+#boxplot is showing that the distribution of the datapoints in the quantiles is similar. The median is almost the same which indicates that X189 can be a good distribution for making predictions for X190
+
+#inter quartile ranges
+IQR(turbineTrainData$X189, na.rm = FALSE, type = 7)
+IQR(turbineTrainData$X190, na.rm = FALSE, type = 7)
+```
+
+
