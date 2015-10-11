@@ -3,6 +3,9 @@ title: "GETurbineCaseStudyPart2"
 output: html_document
 ---
 
+Now use the data from the entire wind farm to perform exploratory analysis and create a predictive model of turbine 190 power given the power from the rest of the farm.  Does this improve the estimate from above?
+
+
 read the training data
 
 ```{r}
