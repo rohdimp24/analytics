@@ -74,3 +74,32 @@ plot(turbineTrainData$X189,turbineTrainData$X190,xlab="Power values turbine 189"
 So the above graphs indicate that there is strong relation between the two set of data points and it is possible to fit a line that passes through the bulk of points  
 Also the histograms show that the distribution of 189 and 190 is similar and not Normal distribution
 
+
+__Now fitting the model__
+```{r}
+linreg1=lm(X190~X189,data=turbineTrainData)
+summary(linreg1)
+
+#plot the points with the linear regression line
+plot(turbineTrainData$X189,turbineTrainData$X190,xlab="Power values turbine 189", ylab="Power values turbine 190", main="Scatter Plot between turbine 190 & 189 with regression line",col="grey")
+abline(lm(turbineTrainData$X190~turbineTrainData$X189), col="red")
+
+
+#getting the residuals values using the summary function
+residualsBySummary=linreg1$residuals
+
+#calculate the SSE
+trainSSE=sum(linreg1$residuals^2)
+trainRMSE=sqrt(trainSSE/nrow(turbineTrainData))
+trainRMSE
+trainSST=sum((turbineTrainData$X190-mean(turbineTrainData$X190))^2)
+trainR2=1-trainSSE/trainSST
+trainR2
+
+#another way to calculate
+trainR2<-summary(linreg1)$adj.r.squared
+trainMSE<-mean((turbineTrainData$X190 -linreg1$fitted.values)^2)
+trainRMSE<-sqrt(trainMSE)
+
+```
+
