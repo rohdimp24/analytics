@@ -81,4 +81,23 @@ model3=lm(X190~X180+X186+X189+X191+X200,data=turbineTrainData)
 summary(model3)
 ```
 
+There is a scope to remove the not so important variable X180
+
+Regression Model4
+
+After removing X180
+```{r}
+model4=lm(X190~X186+X189+X191+X200,data=turbineTrainData)
+summary(model4)
+trainSSE4=sum(model4$residuals^2)
+trainRMSE4=sqrt(trainSSE4/nrow(turbineTrainData))
+trainR2Calc4=1-trainSSE4/trainSST
+trainRSqr4=summary(model4)$adj.r.squared
+MSE.multipleLinreg=trainSSE4
+RMSE.multipleLinReg=trainRMSE4
+summary(model4)$sigma
+
+```
+
+So the model4 is the final regression model
 
