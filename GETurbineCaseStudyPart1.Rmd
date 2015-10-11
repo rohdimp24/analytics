@@ -58,6 +58,16 @@ polygon(density190, col="red", border="blue")
 
 ```
 
+the distribution is kind of skewed towards left 
 
+correlations
+```{r}
 
+par(mfrow=c(1,1))
+cor(turbineTrainData$X189,turbineTrainData$X190)
+
+#plot the scatterplot
+plot(turbineTrainData$X189,turbineTrainData$X190,xlab="Power values turbine 189", ylab="Power values turbine 190", main="Scatter Plot between turbine 190 and turbine 189")
+
+```
 
