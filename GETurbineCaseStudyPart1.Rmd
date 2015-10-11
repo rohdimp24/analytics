@@ -42,4 +42,22 @@ IQR(turbineTrainData$X189, na.rm = FALSE, type = 7)
 IQR(turbineTrainData$X190, na.rm = FALSE, type = 7)
 ```
 
+Now drawing the histogram
+```{r}
+#hist
+par(mfrow=c(2,2))
+hist(turbineTrainData$X189,main="Histogram for turbine189",xlab ='Power Values for 189')
+density189<-density(turbineTrainData$X189)
+plot(density189, main="Density for turbine189",xlab ='Power Values for 189')
+polygon(density189, col="red", border="blue")
+
+hist(turbineTrainData$X190,main="Histogram for turbine190",xlab ='Power Values for 190')
+density190<-density(turbineTrainData$X190)
+plot(density190, main="Density for turbine190",xlab ='Power Values for 190')
+polygon(density190, col="red", border="blue")
+
+```
+
+
+
 
