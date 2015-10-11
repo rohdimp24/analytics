@@ -100,7 +100,39 @@ trainR2
 trainR2<-summary(linreg1)$adj.r.squared
 trainMSE<-mean((turbineTrainData$X190 -linreg1$fitted.values)^2)
 trainRMSE<-sqrt(trainMSE)
+```
+
+__Plot to overlap observed and fitted value__
+```{r}
+par(xpd=T, mar=par()$mar+c(0,0,0,6))
+plot(turbineTrainData$X190,col="grey",main="Overlap of observed and fitted values on train data")
+points(linreg1$fitted.values,col="red")
+
+abline(h=1450,col="blue" )
+
+numHighValues<-nrow(subset(turbineTrainData,turbineTrainData$X190>1450))
+percentHighValues<-numHighValues/nrow(turbineTrainData)*100
+percentHighValues
+
+legend(1100,1500,c("Actual", "Fitted"), pch = c(1,1), col = c('grey','red'))
+
+# Restore default clipping rect
+par(mar=c(5, 4, 4, 2) + 0.1)
 
 ```
+
+We see that about 7.5% points are not well estimated by the model
+
+
+__Performing some linear regression diagnostics on the above model__
+```{r}
+#diagnostics
+>plot(linreg1, col="grey")
+```
+
+We can see that the diagnostic graphs show that the model does not have the issues:  
+* non-linearity
+* error between the actual and fitted value is normally distributed
+* no Heteroscedasticity
 
 
