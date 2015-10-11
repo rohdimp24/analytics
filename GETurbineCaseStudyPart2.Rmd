@@ -33,3 +33,21 @@ abline(a=summary(turbineTrainData$X190)[5],b=0,col="blue",lty=2)
 
 ```
 The box plot shows that for some of the turbines are producing the data similar to X190 while there are others which are not similar. So they might not have much impact while developing the model
+
+Now checking the correlations
+
+```{r}
+cor(turbineTrainData)
+```
+
+
+__Generating models__
+
+Regression Model1
+using all the independent variables  
+
+```{r}
+model1=lm(X190~.,data=turbineTrainData)
+summary(model1)
+
+```
