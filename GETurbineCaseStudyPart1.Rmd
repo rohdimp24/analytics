@@ -12,3 +12,17 @@ turbineTrainData<-read.csv(filenameToRead)
 str(turbineTrainData)
 
 ```
+
+
+__Performing some data explorations__
+
+```{r}
+#Find the summary of the values
+
+summary(turbineTrainData$X189)
+
+summary(turbineTrainData$X190)
+
+```
+The summary clearly shows that the X190 and X189 have similar distribution
+
