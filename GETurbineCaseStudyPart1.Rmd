@@ -167,4 +167,23 @@ testR2
 ```
 we can see that test R2 is slightly improved than the training R2. 
 
+__see how the predcitions and actual data is plotted__
+```{r}
 
+#need to add the legend
+par(xpd=T, mar=par()$mar+c(0,0,0,6))
+plot(turbineTestData$X190,col="grey",main="Overlap of observed and fitted values on test data")
+points(predictions,col="red")
+abline(a=1500,b=0,col="blue")
+legend(1570,1570,c("Actual", "Fitted"), pch = c(1,1), col = c('grey','red'))
+# Restore default clipping rect
+par(mar=c(5, 4, 4, 2) + 0.1)
+
+
+numHighValues<-nrow(subset(turbineTestData,turbineTestData$X190>1500))
+percentHighValues<-numHighValues/nrow(turbineTestData)*100
+percentHighValues
+
+```
+
+the model is now predicting 14.9% values not properly on the test data
