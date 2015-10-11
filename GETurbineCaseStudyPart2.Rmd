@@ -166,3 +166,18 @@ RMSE.rf
 ```
 
 the random forest has imporved a little bit on the bagging model
+
+__Boosting__
+
+```{r}
+library(gbm)
+boost.tree=gbm(X190~.,data=turbineTrainData,distribution = "gaussian",n.trees = 5000,interaction.depth = 4)
+summary(boost.tree)
+boost.predictions=predict(boost.tree,n.trees=5000)
+MSE.boost=mean((boost.predictions-turbineTrainData$X190)^2)
+RMSE.boost=sqrt(MSE.boost)
+RMSE.boost
+
+
+```
+
