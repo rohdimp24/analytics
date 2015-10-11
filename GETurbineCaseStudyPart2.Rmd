@@ -20,4 +20,16 @@ summary(turbineTrainData)
 
 ```
 
+Now drawing the box plts to see the distribution
 
+```{r}
+#boxplots
+turbines<-names(turbineTrainData)
+boxplot(turbineTrainData,names=turbines,main="Box plot comparing all turbines")
+abline(a=median(turbineTrainData$X190),b=0,col="red",lty=2)
+abline(a=summary(turbineTrainData$X190)[2],b=0,col="blue",lty=2)
+abline(a=summary(turbineTrainData$X190)[5],b=0,col="blue",lty=2)
+
+
+```
+The box plot shows that for some of the turbines are producing the data similar to X190 while there are others which are not similar. So they might not have much impact while developing the model
