@@ -71,3 +71,6 @@ plot(turbineTrainData$X189,turbineTrainData$X190,xlab="Power values turbine 189"
 
 ```
 
+So the above graphs indicate that there is strong relation between the two set of data points and it is possible to fit a line that passes through the bulk of points  
+Also the histograms show that the distribution of 189 and 190 is similar and not Normal distribution
+
