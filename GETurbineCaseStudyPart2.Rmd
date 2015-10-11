@@ -62,3 +62,23 @@ summary(model2)
 
 ```
 
+Check for the correlations in this model
+
+```{r}
+subDataFrame<-turbineTrainData[c('X180','X186','X188','X189','X190','X191','X193','X200')]
+corSubData<-cor(subDataFrame)
+corSubData
+
+
+```
+
+Regression Model3
+
+After removing the correlated varibales
+
+```{r}
+model3=lm(X190~X180+X186+X189+X191+X200,data=turbineTrainData)
+summary(model3)
+```
+
+
