@@ -13,7 +13,7 @@ __Read the data first__
 
 ```{r}
 
-filenameToRead<-"train.csv"
+filenameToRead<-"Wind Turbine Power Data_Train_GE Internal.csv"
 turbineTrainData<-read.csv(filenameToRead)
 str(turbineTrainData)
 
@@ -144,7 +144,7 @@ We can see that the diagnostic graphs show that the model does not have the issu
 Run the model on the test data to see the predictions
 ```{r}
 #read the test data
-turbineTestData<-read.csv("test.csv")
+turbineTestData<-read.csv("Wind Turbine Power Data_Test_GE Internal.csv")
 summary(turbineTestData)
 
 predictions=predict(linreg1,newdata=turbineTestData)

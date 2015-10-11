@@ -9,7 +9,7 @@ Now use the data from the entire wind farm to perform exploratory analysis and c
 read the training data
 
 ```{r}
-filenameToRead<-"train.csv"
+filenameToRead<-"Wind Turbine Power Data_Train_GE Internal.csv"
 turbineTrainData<-read.csv(filenameToRead)
 str(turbineTrainData)
 
@@ -189,7 +189,7 @@ Lets see on the test data
 
 Reading the test data set
 ```{r}
-turbineTestData<-read.csv("test.csv")
+turbineTestData<-read.csv("Wind Turbine Power Data_Test_GE Internal.csv")
 summary(turbineTestData)
 
 ```

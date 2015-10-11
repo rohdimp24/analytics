@@ -6,8 +6,8 @@ output: html_document
 Read the training data & the testing data
 
 ```{r}
-turbineTrainData<-read.csv("train.csv")
-turbineTestData<-read.csv("test.csv")
+turbineTrainData<-read.csv("Wind Turbine Power Data_Train_GE Internal.csv")
+turbineTestData<-read.csv("Wind Turbine Power Data_Test_GE Internal.csv")
 
 ```
 
