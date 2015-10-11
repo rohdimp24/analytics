@@ -177,7 +177,51 @@ boost.predictions=predict(boost.tree,n.trees=5000)
 MSE.boost=mean((boost.predictions-turbineTrainData$X190)^2)
 RMSE.boost=sqrt(MSE.boost)
 RMSE.boost
+```
 
+We see that the training error is minimum in case of the boosting
+
+Lets see on the test data
+
+Reading the test data set
+```{r}
+turbineTestData<-read.csv("test.csv")
+summary(turbineTestData)
 
 ```
 
+Now applying the various models to on the test data
+
+```{r}
+#Regression Model
+predMulitReg=predict(model4,newdata=turbineTestData)
+MSE.test.multireg=sum((turbineTestData$X190-predMultiReg)^2)
+RMSE.test.multireg=sqrt(MSE.test.multireg/nrow(turbineTestData))
+RMSE.test.multireg
+
+#Decision Tree
+tree.test.pred=predict(tree.train,newdata=turbineTestData)
+MSE.test.bushy=mean((tree.test.pred-turbineTestData$X190)^2)
+RMSE.test.bushy=sqrt(MSE.test.bushy)
+RMSE.test.bushy
+
+#bagging
+bag.test.pred=predict(bag.turbine,newdata=turbineTestData)
+MSE.test.bag=mean((bag.test.pred-turbineTestData$X190)^2)
+RMSE.test.bag=sqrt(MSE.test.bag)
+RMSE.test.bag
+
+#Random Forest
+rf.test.pred=predict(rf.turbine,newdata=turbineTestData)
+MSE.test.rf=mean((rf.test.pred-turbineTestData$X190)^2)
+RMSE.test.rf=sqrt(MSE.test.rf)
+RMSE.test.rf
+
+#Boosting
+boost.test.pred=predict(boost.tree,newdata=turbineTestData,n.trees=5000)
+MSE.test.boost=mean((boost.test.pred-turbineTestData$X190)^2)
+RMSE.test.boost=sqrt(MSE.test.boost)
+RMSE.test.boost
+
+```
+We find that the regression model is the best
