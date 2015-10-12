@@ -1,10 +1,13 @@
 ---
-title: "GETurbineCaseStudyPart2"
+title: "GETurbineCaseStudy Part2 by Rohit Agarwal 305015992"
 output: html_document
 ---
 
+__Problem__
 Now use the data from the entire wind farm to perform exploratory analysis and create a predictive model of turbine 190 power given the power from the rest of the farm.  Does this improve the estimate from above?
 
+
+__Solution__
 
 read the training data
 

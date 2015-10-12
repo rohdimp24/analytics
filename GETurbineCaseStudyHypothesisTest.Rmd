@@ -1,7 +1,10 @@
 ---
-title: "GETurbineCaseStudyHypothesisTest"
+title: "One-Tail Hypothesis Test By ROhit Agarwal(305015992)"
 output: html_document
 ---
+
+This is to perform the on-tail hypotheis test to assess if the upgrade has improves the performance
+
 
 Read the training data & the testing data
 
