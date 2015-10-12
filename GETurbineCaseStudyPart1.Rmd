@@ -1,5 +1,5 @@
 ---
-title: "GETurbineCaseStudy Part1 by Rohit Agarwal 305015992"
+title: "GETurbineCaseStudy Part1"
 output: html_document
 ---
 
